@@ -1,0 +1,32 @@
+{
+  "name": "mm-template",
+  "version": "1.0.0",
+  "private": false,
+  "description": "middleman using gulp external pipeline",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NathanBowers/mm-template"
+  },
+  "keywords": [
+    "middleman",
+    "gulp"
+  ],
+  "author": "Nathan Bowers",
+  "license": "MIT",
+  "devDependencies": {
+    "browser-sync": "^2.11.1",
+    "del": "^2.2.0",
+    "gulp": "^3.9.1",
+    "gulp-autoprefixer": "^3.1.0",
+    "gulp-concat": "^2.6.0",
+    "gulp-cssmin": "^0.1.7",
+    "gulp-open": "^1.0.0",
+    "gulp-sass": "^2.2.0",
+    "gulp-sourcemaps": "^1.6.0",
+    "run-sequence": "^1.1.5"
+  }
+}

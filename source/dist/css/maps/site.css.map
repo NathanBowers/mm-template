@@ -1,0 +1,1 @@
+{"version":3,"sources":["site.scss"],"names":[],"mappings":"AAGA;EACE,gBAAgB;EAChB,qBAAc;EAAd,sBAAc;EAAd,qBAAc;EAAd,cAAc,EACf","file":"site.css","sourcesContent":["@charset \"utf-8\";\n//@import \"normalize\";\n\nbody {\n  background: red;\n  display: flex;\n}\n"],"sourceRoot":"/source/"}
