@@ -72,7 +72,7 @@ gulp.task('browserSync', function() {
   browserSync.init({
 	port: 7000,
 	//files: "source/dist/css/*.css",
-	reloadDelay: 400,
+	reloadDelay: 200,
 		open: false,   // Don't open a browser window.
 		ui: {
 		port: 7001
