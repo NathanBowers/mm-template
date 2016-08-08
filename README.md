@@ -4,7 +4,7 @@ Proof of concept for using using Gulp + Node asset pipeline with Middleman site 
 
 Why?
 
-Because [Middleman](http://https://middlemanapp.com) is great, but Middleman + Gulp to run Node asset pipeline, Libsass, and BrowserSync is *AWESOME*.
+Because [Middleman](http://middlemanapp.com) is great, but Middleman + Gulp to run Node asset pipeline, Libsass, and BrowserSync is *AWESOME*.
 
 ## Getting Started
 
@@ -45,7 +45,7 @@ Assuming you've got Ruby, Bundler gem, and Node/npm...
 
 ## Support and reporting issues
 
-Something busted? File an issue: [mm-template/issues](./issues).
+Something busted? File an issue: [mm-template/issues](../../issues).
 
 ## License
 
