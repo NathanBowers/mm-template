@@ -38,6 +38,11 @@ Assuming you've got Ruby, Bundler gem, and Node/npm...
 1. `$ middleman` to start local Middleman server. It should open your default browser to localhost:7000.
 1. Or, `$ middleman build` to export your Middleman site to static files in `static-build-output`
 
+### Updating
+
+1. `$ bundle update`
+1. `$ npm update`
+
 ## Support and reporting issues
 
 Something busted? File an issue: [mm-template/issues](issues).
