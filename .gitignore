@@ -14,9 +14,6 @@
 # Ignore the static output files
 /source/dist
 
-# Ignore the build directory
-/static-build-output
-
 # Ignore cache
 /.sass-cache
 /.cache
