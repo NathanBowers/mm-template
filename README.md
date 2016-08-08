@@ -45,7 +45,7 @@ Assuming you've got Ruby, Bundler gem, and Node/npm...
 
 ## Support and reporting issues
 
-Something busted? File an issue: [mm-template/issues](issues).
+Something busted? File an issue: [mm-template/issues](./issues).
 
 ## License
 
