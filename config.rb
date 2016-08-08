@@ -1,4 +1,4 @@
-  set :build_dir, 'builder'
+  set :build_dir, 'static-build-output'
   # Use relative links
   set :relative_links, true
   # Use relative asset pipelineURLs
