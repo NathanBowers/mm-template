@@ -4,18 +4,18 @@ Proof of concept for using using Gulp + Node asset pipeline with Middleman site 
 
 Why?
 
-Because [Middleman](http://middlemanapp.com) is great, but Middleman + Gulp to run Node asset pipeline, Libsass, and BrowserSync is *AWESOME*.
+Because [Middleman](http://middlemanapp.com) is great, but Middleman + [Gulp](http://gulpjs.com) to run Node asset pipeline, [Libsass](http://sass-lang.com/libsass), and [BrowserSync](https://www.browsersync.io) is *AWESOME*.
 
 ## Getting Started
 
 Main dependencies: Ruby and Node.js
 
-Installing Ruby and Node.js is beyond the scope of this README, but look into `rbenv` or `rvm` for Ruby and `nvm` for Node.js.
+Installing Ruby and Node.js is beyond the scope of this README, but look into [rbenv](https://github.com/rbenv/rbenv) or [rvm](https://rvm.io) for Ruby and [nvm](https://github.com/creationix/nvm) for Node.js.
 
 ### Prerequisities
 
 * Ruby
-* Bundler gem
+* [Bundler gem](http://bundler.io)
 * Node.js + npm
 
 To verify you've got the above prerequisities installed:
