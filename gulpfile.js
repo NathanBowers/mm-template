@@ -14,6 +14,8 @@ var browserSync = require('browser-sync').create();
 var runSequence = require('run-sequence');
 var open = require('gulp-open');
 var touch = require('gulp-touch');
+var svgSprite = require('gulp-svg-sprite');
+var plumber = require('gulp-plumber');
 
 var autoprefixerOptions = {
 	browsers: ['last 2 versions', '> 5%']
@@ -23,14 +25,14 @@ var autoprefixerOptions = {
 // DEFAULT GULP BUILD TASK, RUNS WHEN "MIDDLEMAN" COMMAND RUN IN TERMINAL
 ////////////////////////////////////////
 gulp.task('default', function(callback) {
-	runSequence('clean:cleanBuild', 'sass', 'scripts', ['watch'], callback);
+	runSequence('clean:cleanBuild', 'svgSprite', 'sass', 'scripts', ['watch'], callback);
 });
 
 ////////////////////////////////////////
 // "STATIC BUILD" GULP BUILD TASK, RUNS WHEN "MIDDLEMAN BUILD" COMMAND RUN IN TERMINAL
 ////////////////////////////////////////
 gulp.task('buildProd', function(callback) {
-	runSequence('clean:cleanBuild', 'sass', 'scripts', callback);
+	runSequence('clean:cleanBuild', 'svgSprite', 'sass', 'scripts', callback);
 });
 
 ////////////////////////////////////////
@@ -66,6 +68,32 @@ gulp.task('touchConfig', function() {
 	gulp.src('config.rb').pipe(touch()); // Touch config.rb on gulpfile.js save so Middleman reloads everything.
 });
 
+gulp.task('svgSprite', function() {
+	baseDir	  = 'source/images',   // <-- Set to your SVG base directory
+	svgGlob	  = '**/*.svg',	   // <-- Glob to match your SVG files
+	outDir	   = 'source/dist/images',	 // <-- Main output directory
+	config	   = {
+		"mode": {
+			"css": {
+				"render": {
+					"scss": {
+						"dest": "../../../sass/_svg.scss"
+					}
+				}
+			},
+			"defs": true,
+			"symbol": {
+				"example": true
+			}
+		}
+	};
+
+	return gulp.src(svgGlob, {cwd: baseDir})
+		.pipe(plumber())
+		.pipe(svgSprite(config)).on('error', function(error){ console.log(error); })
+		.pipe(gulp.dest(outDir))
+});
+
 ////////////////////////////////////////
 // BrowserSync lives inside the watch task. Much better this way because of css watch/browsersync reload concurrency issues. See below
 ////////////////////////////////////////
@@ -79,7 +107,7 @@ gulp.task('watch', ['sass'], function(gulpCallback) {
 		reloadDelay: 100,			// Seems to help, concurrency Voodoo. Probably.
 		reloadDebounce: 500,		// Seems to help, concurrency Voodoo. Probably.
 		reloadOnRestart: true,
-		files: ["source/dist/css/*.css", "source/dist/js/*.js", "source/images/*.*"], // Use BrowserSync instead of gulp watchers to watch static files.
+		files: ["source/dist/css/*.css", "source/dist/js/*.js", "source/dist/images/**.svg", "source/**.erb", "source/**.slim"], // Use BrowserSync instead of gulp watchers to watch static files.
 		port: 7000,			// The port the BrowserSync proxy runs on.
 		ui: {
 			port: 7001		// Port that BrowserSync UI tools runs on.
@@ -89,6 +117,7 @@ gulp.task('watch', ['sass'], function(gulpCallback) {
 		gulp.watch('config.rb', browserSync.exit); 			// Exit BrowserSync on config.rb change
 		gulp.watch('source/sass/*.+(scss|sass)', ['sass']); // Watch Sass/Scss
 		gulp.watch('source/js/*.js', ['scripts']);			// Watch js
+		gulp.watch('source/images/*.svg', ['svgSprite']);	// Watch svg
 		gulp.watch('gulpfile.js', ['touchConfig']);			// "Touch" config.rb on gulpfile.js save so Middleman reloads
 
 		gulpCallback(); // notify gulp that this task is done
