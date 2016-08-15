@@ -13,6 +13,7 @@
 
 # Ignore the static output files
 /source/dist
+/source/sass/sprites
 
 # Ignore cache
 /.sass-cache
