@@ -1,0 +1,41 @@
+---
+title: Hi!
+---
+header
+	h1 Middleman + Gulp + Node + Sass + SVG 
+	p
+		| This preview features methods of using the generated sprite.
+
+section
+	h2
+		| A) Conventional SVG CSS sprite
+	div
+		- ['middleman-logo', 'sass-logo', 'node-js-logo', 'gulp-logo'].each do |shape|
+			.icon-box
+				i class="svg-#{shape} svg-#{shape}-dims"
+					| #{shape}
+				h4
+					| #{shape}
+section
+	h2
+		| B) External SVG sprite with pre-defined views referenced by fragment identifiers (doesn't work in Safari unless browsing file://)
+	div
+		- ['middleman-logo', 'sass-logo', 'node-js-logo', 'gulp-logo'].each do |shape|
+			.icon-box
+				img src="dist/images/global-sprite.svg##{shape}" class="svg-#{shape}-dims" alt="#{shape}"
+				h4
+					| #{shape}
+								
+section
+	h2
+		| C) Inline SVG with external sprite (IE 9-11 with polyfill only)
+	h3 AVOID USING STROKES IN YOUR SVG. Convert strokes to outlines instead.
+	p Strokes can make the viewbox screwy.
+	div
+		- ['middleman-logo', 'sass-logo', 'node-js-logo', 'gulp-logo'].each do |shape|
+			.icon-box
+				div class="relative-position" 
+					svg class="svg-#{shape}-dims"
+						use xlink:href="dist/images/symbol/svg/sprite.symbol.svg##{shape}"
+				h4
+					| #{shape}

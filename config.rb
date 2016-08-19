@@ -14,7 +14,7 @@
 
   set :js_dir, 'dist/js'
 
-  set :images_dir, 'images'
+  set :images_dir, 'dist/images'
 
 ###
 # Page options, layouts, aliases and proxies

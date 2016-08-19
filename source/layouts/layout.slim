@@ -1,0 +1,16 @@
+doctype html
+html lang='en'
+	head
+		title #{current_page.data.title || 'MM'}
+		meta charset='utf-8'
+		meta http-equiv="x-ua-compatible" content="ie=edge"
+		link name='apple-mobile-web-app-title' content='MM'
+		meta name="apple-mobile-web-app-capable" content="yes"
+		meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"
+		meta name='viewport' content='initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0, width=device-width'
+		= stylesheet_link_tag "site.min", media: 'screen'
+		= javascript_include_tag :all
+	body class=(current_page.data.body_class || '')		
+		= partial 'partials/header'
+		main
+			== yield

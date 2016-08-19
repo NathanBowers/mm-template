@@ -10,3 +10,6 @@ gem 'tzinfo-data', platforms: [:mswin, :mingw, :jruby]
 
 # Middleman Gems
 gem 'middleman', '>= 4.0.0'
+
+# Turn on Slim templates http://slim-lang.com
+gem 'slim', '>= 3.0.0'
