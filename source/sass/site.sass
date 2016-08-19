@@ -10,36 +10,37 @@
 body
 	background: #ECC561
 	margin: 2rem
+	font-family: sans-serif
 
-section, header, main
+main
+	max-width: 1050px
+	margin: auto
+
+section, header
 	display: block
 	margin: 2rem
-	border-top: 1px solid black
 	clear: both
+	border-top: 1px solid rgba(black, .2)
+	&:first-child
+		border: none
 
-li
-	list-style: none
-	float: left
 .icon-box
-	background: silver
+	background: rgba(white, .2)
 	margin: 1rem
-	padding: 2rem
-	border: 1px solid black
-	position: relative
-	overflow: visible
+	padding: 2rem 2rem .5rem 2rem
+	border: 1px solid rgba(black, .1)
+	display: block
+	float: left
+	text-align: center
+	&:first-child
+		margin-left: 0
+	&:last-child
+		margin-right: 0
 	i
 		display: inline-block
-		box-shadow: 0 0 0 1px red
-.relative-position
-	position: relative
-	display: table-cell
-	border: 1px solid green
-	width: 200px
-	height: 200px
-	vertical-align: middle
-	text-align: center
-svg
-	box-shadow: 0 0 0 1px red
+		color: transparent
+
+
 
 // .welcome
 // 	animation-name: welcome
