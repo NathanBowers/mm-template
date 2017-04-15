@@ -39,3 +39,14 @@ section
 						use xlink:href="dist/images/symbol/svg/sprite.symbol.svg##{shape}"
 				h4
 					| #{shape}
+
+section
+	h2
+		| D) Bitmap images are simply copied to dist/images.
+	div
+		- ['dice.png'].each do |img|
+			.icon-box
+				div class="relative-position" 
+					img src="dist/images/#{img}" alt="#{img}" style="max-width: 200px;"
+				h4
+					| #{img}
