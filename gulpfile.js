@@ -25,11 +25,7 @@ var autoprefixerOptions = {
 // DEFAULT GULP BUILD TASK, RUNS WHEN "MIDDLEMAN" COMMAND RUNS IN TERMINAL
 ////////////////////////////////////////
 gulp.task('default', function(callback) {
-<<<<<<< HEAD
-	runSequence('clean:cleanBuild', 'svgSprite', 'sass', 'scripts', ['watch'], callback);
-=======
 	runSequence('clean:cleanBuild', 'svgSprite', 'sass', 'scripts', 'copyFonts', 'copyBitmaps', ['watch'], callback);
->>>>>>> release
 });
 
 ////////////////////////////////////////
@@ -66,8 +62,6 @@ gulp.task('sass', function() {
 	.pipe(rename({suffix: '.min'})) 			// <-- Rename minified file to .min.css
 	.pipe(sourcemaps.write('maps/'))			// <-- Turn on .css source map
 	.pipe(gulp.dest('source/dist/css/'));		// <-- Output the completed .css file
-<<<<<<< HEAD
-=======
 });
 
 gulp.task('copyFonts', function() {
@@ -78,7 +72,6 @@ gulp.task('copyFonts', function() {
 gulp.task('copyBitmaps', function() {
 	gulp.src('source/images/**/*.{png,jpg,jpeg,gif}')
 	.pipe(gulp.dest('./source/dist/images/'));
->>>>>>> release
 });
 
 gulp.task('touchConfig', function() {
@@ -132,24 +125,13 @@ gulp.task('watch', ['sass'], function(gulpCallback) {
 		reloadDelay: 100,			// <-- Seems to help, concurrency Voodoo. Probably.
 		reloadDebounce: 500,		// <-- Seems to help, concurrency Voodoo. Probably.
 		reloadOnRestart: true,
-<<<<<<< HEAD
-		files: ["source/dist/css/*.css", "source/dist/js/*.js", "source/dist/**/*.svg", "source/**/*.erb", "source/**/*.slim", "source/**/*.html"], // Use BrowserSync instead of gulp watchers to watch static files.
-=======
 		files: ["source/**/*.erb", "source/**/*.slim", "source/**/*.html", "source/dist/css/*.css", "source/dist/js/*.js", "source/dist/**/*.+(svg|jpg|jpeg|png|gif|ttf|woff|eof)", "!static-build-output/**/*.*"], // Use BrowserSync instead of gulp watchers to watch static files.
->>>>>>> release
 		port: 7000,			// <-- The port the BrowserSync proxy runs on.
 		ui: {
 			port: 7001		// <-- Port that BrowserSync UI tools runs on.
 		},
 	}, function callback() {
 		// (server is now up)
-<<<<<<< HEAD
-		gulp.watch('config.rb', browserSync.exit); 				// <-- Exit BrowserSync on config.rb change
-		gulp.watch('source/sass/**/*.+(scss|sass)', ['sass']);	// <-- Watch Sass/Scss
-		gulp.watch('source/js/*.js', ['scripts']);				// <-- Watch js
-		gulp.watch('source/images/**/*.svg', ['svgSprite']);	// <-- Watch svg
-		gulp.watch('gulpfile.js', ['touchConfig']);				// <-- "Touch" config.rb on gulpfile.js save so Middleman reloads
-=======
 		gulp.watch('config.rb', browserSync.exit); 									// <-- Exit BrowserSync on config.rb change
 		gulp.watch('source/sass/**/*.+(scss|sass)', ['sass']);						// <-- Watch Sass/Scss
 		gulp.watch('source/js/*.js', ['scripts']);									// <-- Watch js
@@ -157,7 +139,6 @@ gulp.task('watch', ['sass'], function(gulpCallback) {
 		gulp.watch('source/images/**/*.+(jpg|jpeg|png|gif)', ['copyBitmaps']);		// <-- Watch png, jpg, gif
 		gulp.watch('source/fonts/**/*.+(ttf|woff|eof)', ['copyFonts']);				// <-- Watch fonts
 		gulp.watch('gulpfile.js', ['touchConfig']);									// <-- "Touch" config.rb on gulpfile.js save so Middleman reloads
->>>>>>> release
 
 		gulpCallback(); // <-- Notify gulp that this task is done
 	});
