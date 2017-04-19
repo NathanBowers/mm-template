@@ -6,7 +6,10 @@
 
   configure :build do
 
-    ignore '*.sass'
+    ignore 'sass/*'
+    ignore 'images/*'
+    ignore 'js/*'
+    ignore 'fonts/*'
 
   end
 
