@@ -98,10 +98,11 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  middleman (>= 4.0.0)
-  slim (>= 3.0.0)
-  tzinfo-data
-  wdm (~> 0.1.0)
+  middleman (>= 4.2.1)
+  slim (>= 3.0.7)
+
+RUBY VERSION
+   ruby 2.4.1p111
 
 BUNDLED WITH
    1.14.6
