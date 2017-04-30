@@ -1,23 +1,27 @@
-  set :build_dir, 'static-build-output'
-  # Use relative links
-  set :relative_links, true
-  # Use relative asset pipelineURLs
-  activate :relative_assets
+set :build_dir, 'static-build-output'
+# Use relative links
+set :relative_links, true
+# Use relative asset pipelineURLs
+activate :relative_assets
 
-  configure :build do
+# output pretty HTML
+# Slim::Engine.default_options[:pretty] = true
 
-    ignore 'sass/*'
-    ignore 'images/*'
-    ignore 'js/*'
-    ignore 'fonts/*'
+configure :build do
 
-  end
+ignore 'sass/*'
+ignore 'images/*'
+ignore 'js/*'
+ignore 'fonts/*'
+ignore 'source/*'
 
-  set :css_dir, 'dist/css'
+end
 
-  set :js_dir, 'dist/js'
+set :css_dir, 'dist/css'
 
-  set :images_dir, 'dist/images'
+set :js_dir, 'dist/js'
+
+set :images_dir, 'dist/images'
 
 ###
 # Page options, layouts, aliases and proxies
