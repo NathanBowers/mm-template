@@ -22,7 +22,7 @@ section
 	div
 		- ['middleman-logo', 'sass-logo', 'node-js-logo', 'gulp-logo'].each do |shape|
 			.icon-box
-				img src="dist/images/global-sprite.svg##{shape}" class="svg-#{shape}-dims" alt="#{shape}"
+				img src="dist/images/svg-sprite/global-sprite.svg##{shape}" class="svg-#{shape}-dims" alt="#{shape}"
 				h4
 					| #{shape}
 								
@@ -36,17 +36,17 @@ section
 			.icon-box
 				div class="relative-position" 
 					svg class="svg-#{shape}-dims"
-						use xlink:href="dist/images/symbol/svg/sprite.symbol.svg##{shape}"
+						use xlink:href="dist/images/svg-sprite/symbol/svg/sprite.symbol.svg##{shape}"
 				h4
 					| #{shape}
 
 section
 	h2
-		| D) Bitmap images are simply copied to dist/images.
+		| D) Bitmap images and non-sprite .svg are simply copied to dist/images.
 	div
-		- ['dice.png'].each do |img|
+		- ['dice.png', 'SVG_logo.svg'].each do |img|
 			.icon-box
 				div class="relative-position" 
-					img src="dist/images/#{img}" alt="#{img}" style="max-width: 200px;"
+					img src="dist/images/#{img}" alt="#{img}" style="max-height: 100px;" height="100"
 				h4
 					| #{img}
