@@ -2,7 +2,7 @@
 // GULP INIT
 ////////////////////////////////////////
 var gulp = require('gulp');
-
+var fsPath = require('fs-path');		// fsPath allows recursive and tolerant file/dir delete and create.
 var del = require('del');
 var sass = require('gulp-sass');
 var concat = require('gulp-concat');
@@ -56,7 +56,7 @@ gulp.task('sass', function() {
 	return gulp
 	.src('source/sass/**/*.+(scss|sass)')		// <-- Gets all files ending with .sass or .scss in app/scss and children dirs
 	.pipe(sourcemaps.init())					// <-- Enables sourcemap for later output
-	.pipe(sass().on('error', sass.logError)) 	// <-- Make sure to use sass.logError so gulp.js 'watch' task doesn't die when there's a Sass build error.
+	.pipe(sass().on('error', sass.logError))	// <-- Make sure to use sass.logError so gulp.js 'watch' task doesn't die when there's a Sass build error.
 	.pipe(autoprefixer(autoprefixerOptions))	// <-- Autoprefix the resultant .css
 	.pipe(cssmin()) 							// <-- Minify .css
 	.pipe(rename({suffix: '.min'})) 			// <-- Rename minified file to .min.css
@@ -79,19 +79,19 @@ gulp.task('touchConfig', function() {
 });
 
 gulp.task('svgSprite', function() {
-	baseDir	  = 'source/images/svg-sprite',	// <-- Set to your SVG base directory
-	svgGlob	  = '**/*.svg',	   					// <-- Glob to match your SVG files
-	// outDir	   = './source/sass/sprites',		// <-- Main output directory
-	outDir	   = './source/dist/images/svg-sprite',
+	fsPath.writeFileSync('source/dist/css/_svg-sprite.scss', ' ');		// <-- In case no sprites are in the sprites folder, create the .scss so it doesn't break Sass compile.
+	baseDir	  = 'source/images/svg-sprite',								// <-- Set to your SVG base directory
+	svgGlob	  = '**/*.svg',	   											// <-- Glob to match your SVG files
+	outDir	   = './source/dist/images/svg-sprite',						// <-- Main output directory
 	config	   = {
 		dest: '.',
 		mode: {
-			view: {													// <-- Use "view" mode for "css" svg sprites that can be used as inline images also.
+			view: {														// <-- Use "view" mode for "css" svg sprites that can be used as inline images also.
 				dest: '../',
-				sprite: '../images/svg-sprite/global-sprite.svg',	// <-- Paths are tricky http://stackoverflow.com/questions/29838150/modifying-destination-and-filename-of-gulp-svg-sprite
-				bust: false,										// <-- Turn off Cache busting
-				layout: 'packed',									// <-- Pack the svg shapes tightly spaced in the sprite
-				example: true,										// <-- Render out a sample .html file to /source/sass/sprites/ showing the sprites
+				sprite: '../images/svg-sprite/global-sprite.svg',		// <-- Paths are tricky http://stackoverflow.com/questions/29838150/modifying-destination-and-filename-of-gulp-svg-sprite
+				bust: false,											// <-- Turn off Cache busting
+				layout: 'packed',										// <-- Pack the svg shapes tightly spaced in the sprite
+				example: true,											// <-- Render out a sample .html file to /source/sass/sprites/ showing the sprites
 				render: {
 					scss: {
 						dest: '../css/_svg-sprite.scss'					// <-- Output the scss file that will be imported into the main sass
@@ -132,14 +132,14 @@ gulp.task('watch', ['sass'], function(gulpCallback) {
 		},
 	}, function callback() {
 		// (server is now up)
-		gulp.watch('config.rb', browserSync.exit); 									// <-- Exit BrowserSync on config.rb change
-		gulp.watch('source/sass/**/*.+(scss|sass)', ['sass']);						// <-- Watch Sass/Scss
-		gulp.watch('source/js/*.js', ['scripts']);									// <-- Watch js
-		gulp.watch('source/images/svg-sprite/**/*.svg', ['svgSprite']);						// <-- Watch svg
-		gulp.watch('source/images/*.+(jpg|jpeg|png|gif|svg)', ['copyBitmaps']);		// <-- Watch png, jpg, gif, non-sprite svg
-		gulp.watch('source/fonts/**/*.+(ttf|woff|woff2|eof)', ['copyFonts']);				// <-- Watch fonts
-		gulp.watch('gulpfile.js', ['touchConfig']);									// <-- "Touch" config.rb on gulpfile.js save so Middleman reloads
+		gulp.watch('config.rb', browserSync.exit); 										// <-- Exit BrowserSync on config.rb change
+		gulp.watch('source/sass/**/*.+(scss|sass)', ['sass']);							// <-- Watch Sass/Scss
+		gulp.watch('source/js/*.js', ['scripts']);										// <-- Watch js
+		gulp.watch('source/images/**/*.svg', ['svgSprite']);							// <-- Watch svg
+		gulp.watch('source/images/*.+(jpg|jpeg|png|gif|svg)', ['copyBitmaps']);			// <-- Watch png, jpg, gif, non-sprite svg
+		gulp.watch('source/fonts/**/*.+(ttf|woff|woff2|eof)', ['copyFonts']);			// <-- Watch fonts
+		gulp.watch('gulpfile.js', ['touchConfig']);										// <-- "Touch" config.rb on gulpfile.js save so Middleman reloads
 
-		gulpCallback(); // <-- Notify gulp that this task is done
+		gulpCallback();		// <-- Notify gulp that this task is done
 	});
 });
