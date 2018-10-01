@@ -1,0 +1,1 @@
+console.info("Yes, .js files are being concatenated.");
