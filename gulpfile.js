@@ -4,7 +4,7 @@
 
 // Load plugins
 const gulp = require("gulp");
-const fsPath = require('fs-path');		// fsPath allows recursive and tolerant file/dir delete and create.
+const fs = require('fs-extra'); 
 const del = require('del');
 const sass = require('gulp-sass');
 const concat = require('gulp-concat');
@@ -23,59 +23,59 @@ const autoprefixerOptions = {
 };
 
 function touchConfig(done)  {
-	gulp.src('config.rb').pipe(touch()); 		// <-- Touch config.rb on gulpfile.js save so Middleman reloads everything.
+	gulp.src('config.rb').pipe(touch()); 		// <-- Touch config.rb on gulpfile.js save so Middleman restarts.
 	done();
 }
 
 // BrowserSync
 function browserSync(done) {
   browsersync.init({
-	proxy: "localhost:4567",	// <-- Proxy local running Middleman server.
-		open: false, 				// <-- Launch default browser on BrowserSync init.
-		// reloadDelay: 100,			// <-- Seems to help, concurrency Voodoo. Probably.
-		// reloadDebounce: 500,		// <-- Seems to help, concurrency Voodoo. Probably.
+	notify: true,					// <-- Don't show the top right notification on BrowserSync changes.
+	// ghostMode: false,				// <-- Turn off syncing of scroll and clicks across browser windows.
+	proxy: "localhost:4567",		// <-- Proxy local running Middleman server.
+		open: true, 				// <-- Launch default browser on BrowserSync init.
 		reloadOnRestart: true,
     port: 7000,      // <-- The port the BrowserSync proxy runs on.
     ui: {
 			port: 7001		// <-- Port that BrowserSync UI tools runs on.
 		}
   });
-  console.log("BROWSERSYNC INIT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
   done();
 }
 
 // BrowserSync Reload, used for slim and erb file changes
 function browserSyncReload(done) {
   browsersync.reload();
-  console.log("BROWSERSYNC RELOAD %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
   done();
 }
 
 // Clean assets
 function clean() {
   return del([
-		'source/dist/**'							// <-- More files you could clean: 'data/temp.json', 'source/javascripts/application.js'
+		'source/dist/**'
 	]);
 }
 
 function copyFonts(done)  {
-	gulp.src('source/fonts/**/*.{ttf,woff,woff2,eof}')
+	return gulp.src('source/fonts/**/*.{ttf,woff,woff2,eof}')
 	.pipe(gulp.dest('./source/dist/fonts/'))
 	.pipe(browsersync.stream());
 	done();
 }
 
 function copyImages(done)  {
-	gulp.src('source/images/*.{png,jpg,jpeg,gif,svg}')
+	return gulp.src(['source/images/**/*.{png,jpg,jpeg,gif,svg}', '!source/**/svg-sprite/**/*'])
 	.pipe(gulp.dest('./source/dist/images/'))
 	.pipe(browsersync.stream());
-	done();
 }
 
-// Optimize Images
+// SVG sprites
 function svgSprite(done)  {
-	fsPath.writeFileSync('source/dist/css/_svg-sprite.scss', ' ');		// <-- In case no sprites are in the sprites folder, create the .scss so it doesn't break Sass compile.
-	var baseDir	  = 'source/images/svg-sprite',								// <-- Set to your SVG base directory
+	fs.outputFile('source/dist/css/_svg-sprite.scss', '')
+	.catch(err => {
+		console.error(err)
+	});
+	var baseDir	  = 'source/images/svg-sprite',							// <-- Set to your SVG base directory
 	svgGlob	  = '**/*.svg',	   											// <-- Glob to match your SVG files
 	outDir	   = './source/dist/images/svg-sprite',						// <-- Main output directory
 	config	   = {
@@ -99,30 +99,27 @@ function svgSprite(done)  {
 			}
 		}
 	};
-
-	gulp.src(svgGlob, {cwd: baseDir})
-		
+	return gulp.src(svgGlob, {cwd: baseDir})
 		.pipe(plumber())
 		.pipe(svgsprite(config)).on('error', function(error){ console.log(error); })	// <-- Plumber error handler
 		.pipe(gulp.dest(outDir))														// <-- Output the files
 		.pipe(browsersync.stream());
-	done();
+		done();
 }
 
 
 function styles(done)  {
-	gulp.src('source/sass/**/*.+(scss|sass)')		// <-- Gets all files ending with .sass or .scss in app/scss and children dirs
+	return gulp.src('source/sass/**/*.+(scss|sass)')		// <-- Gets all files ending with .sass or .scss in app/scss and children dirs
 	.pipe(plumber())
 	.pipe(sourcemaps.init())					// <-- Enables sourcemap for later output
 	.pipe(sass()).on('error', sass.logError)	// <-- Make sure to use sass.logError so gulp.js 'watch' task doesn't die when there's a Sass build error.
 	.pipe(autoprefixer(autoprefixerOptions))	// <-- Autoprefix the resultant .css
-	.pipe(cssmin()) 							// <-- Minify .css
+	// .pipe(cssmin()) 							// <-- Minify .css
 	.pipe(rename({suffix: '.min'})) 			// <-- Rename minified file to .min.css
 	.pipe(sourcemaps.write('maps/'))			// <-- Turn on .css source map
 	.pipe(gulp.dest('source/dist/css/'))		// <-- Output the completed .css file
 	.pipe(browsersync.stream());
 	done();
-
 }
 
 
@@ -137,13 +134,13 @@ function scripts()  {		// <-- This blog concatenates .js files and put them in '
 
 
 // Watch files
-function watchFiles() {
+function watchFiles(done) {
   gulp.watch('config.rb', browserSync.exit);  // <-- Exit BrowserSync on config.rb change
   gulp.watch('gulpfile.js', touchConfig); // <-- "Touch" config.rb on gulpfile.js save so Middleman reloads
   gulp.watch("source/**/*.+(scss|sass)", styles);
   gulp.watch("source/js/*.js", scripts);
-  gulp.watch('source/images/svg-sprite/*.svg', svgSprite);
-  gulp.watch('source/images/*.+(jpg|jpeg|png|gif|svg)', copyImages);
+  gulp.watch('source/images/svg-sprite/*.svg', gulp.series(clean, scripts, copyFonts, copyImages, svgSprite, styles, browserSyncReload));    // Couldn't quite get SVG spriting to work on svg files changes without doing a full clean and rebuild
+  gulp.watch(['source/images/**/*.{png,jpg,jpeg,gif,svg}', '!source/**/svg-sprite/**/*'], copyImages);
   gulp.watch('source/fonts/**/*.+(ttf|woff|woff2|eof)', copyFonts);
   gulp.watch(
     [
@@ -154,6 +151,7 @@ function watchFiles() {
     ],
     gulp.series(browserSyncReload)
   );
+  done();
 }
 
 // Tasks
@@ -175,7 +173,7 @@ gulp.task("svgSprite", svgSprite);
 ////////////////////////////////////////
 gulp.task(
   "default",
-  gulp.series(clean, gulp.parallel(styles, scripts, copyFonts, copyImages, svgSprite, watchFiles, browserSync ))
+  gulp.series(clean, scripts, copyFonts, copyImages, svgSprite, styles, browserSync, watchFiles)
 );
 
 
@@ -184,5 +182,5 @@ gulp.task(
 ////////////////////////////////////////
 gulp.task(
   "buildProd",
-  gulp.series(clean, gulp.parallel(styles, scripts, copyFonts, copyImages, svgSprite ))
+  gulp.series(clean, scripts, copyFonts, copyImages, svgSprite, styles)
 );
