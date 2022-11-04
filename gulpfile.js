@@ -14,13 +14,9 @@ const cssmin = require('gulp-cssmin');
 const rename = require('gulp-rename');
 const browsersync = require('browser-sync').create();
 const open = require('gulp-open');
-const touch = require('gulp-touch');
+const touch = require('gulp-touch-fd');
 const svgsprite = require('gulp-svg-sprite');
 const plumber = require('gulp-plumber');
-
-const autoprefixerOptions = {
-	browsers: ['last 2 versions', '> 5%']
-};
 
 function touchConfig(done)  {
 	gulp.src('config.rb').pipe(touch()); 		// <-- Touch config.rb on gulpfile.js save so Middleman restarts.
@@ -30,14 +26,15 @@ function touchConfig(done)  {
 // BrowserSync
 function browserSync(done) {
   browsersync.init({
-	notify: true,					// <-- Don't show the top right notification on BrowserSync changes.
-	// ghostMode: false,				// <-- Turn off syncing of scroll and clicks across browser windows.
-	proxy: "localhost:4567",		// <-- Proxy local running Middleman server.
-		open: true, 				// <-- Launch default browser on BrowserSync init.
-		reloadOnRestart: true,
-    port: 7000,      // <-- The port the BrowserSync proxy runs on.
-    ui: {
-			port: 7001		// <-- Port that BrowserSync UI tools runs on.
+	notify: true,					// <-- Show the top right notification on BrowserSync changes.
+	ghostMode: true,				// <-- Syncing of scroll and clicks across browser windows.
+	open: true, 					// <-- Launch default browser on BrowserSync init.
+	reloadOnRestart: true,
+	proxy: "127.0.0.1:4567",		// <-- Proxy local running Middleman server.
+	port: 7000,     				// <-- The port the BrowserSync proxy runs on.
+	// logLevel: "debug",				// <-- Verbose console output.
+	ui: {
+			port: 7001				// <-- Port that BrowserSync UI tools runs on.
 		}
   });
   done();
@@ -113,8 +110,8 @@ function styles(done)  {
 	.pipe(plumber())
 	.pipe(sourcemaps.init())					// <-- Enables sourcemap for later output
 	.pipe(sass()).on('error', sass.logError)	// <-- Make sure to use sass.logError so gulp.js 'watch' task doesn't die when there's a Sass build error.
-	.pipe(autoprefixer(autoprefixerOptions))	// <-- Autoprefix the resultant .css
-	// .pipe(cssmin()) 							// <-- Minify .css
+	.pipe(autoprefixer())	// <-- Autoprefix the resultant .css
+	.pipe(cssmin()) 							// <-- Minify .css
 	.pipe(rename({suffix: '.min'})) 			// <-- Rename minified file to .min.css
 	.pipe(sourcemaps.write('maps/'))			// <-- Turn on .css source map
 	.pipe(gulp.dest('source/dist/css/'))		// <-- Output the completed .css file
@@ -143,13 +140,13 @@ function watchFiles(done) {
   gulp.watch(['source/images/**/*.{png,jpg,jpeg,gif,svg}', '!source/**/svg-sprite/**/*'], copyImages);
   gulp.watch('source/fonts/**/*.+(ttf|woff|woff2|eof)', copyFonts);
   gulp.watch(
-    [
+	[
 	  "source/**/*.erb", 
-      "source/**/*.slim",
-      "source/**/*.html",
+	  "source/**/*.slim",
+	  "source/**/*.html",
 	  "!static-build-output/**/*.*"
-    ],
-    gulp.series(browserSyncReload)
+	],
+	gulp.series(browserSyncReload)
   );
   done();
 }
