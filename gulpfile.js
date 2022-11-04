@@ -14,7 +14,7 @@ const cssmin = require('gulp-cssmin');
 const rename = require('gulp-rename');
 const browsersync = require('browser-sync').create();
 const open = require('gulp-open');
-const touch = require('gulp-touch');
+const touch = require('gulp-touch-fd');
 const svgsprite = require('gulp-svg-sprite');
 const plumber = require('gulp-plumber');
 
